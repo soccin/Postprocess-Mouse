@@ -1,18 +1,13 @@
 #!/bin/bash
 
-#POSTPROCESS_SCRIPT=/home/socci/Code/Pipelines/CBE/Variant/PostProcessV3/doPostProcessV3.sh
+SDIR="$( cd "$( dirname "$0" )" && pwd )"
+
 POSTPROCESS_SCRIPT=/home/socci/Work/LUNA/Work/PostProcess/Mouse/Version5/PostProcess_V5-Mouse/doPostProcessV5.sh
 
 function usage {
     echo "usage: doPost.sh [-f] [-p] [-d PROJECTDIR] pipelineOutputDir"
-	echo "    -f turn on facets"
-	echo "    -p turn off post"
 	echo "    -d explicitly set projectDirectory"
 }
-
-# Default FACETS to NO
-FACETS="NO"
-POST="YES"
 
 PROJECTDIR=""
 while getopts "fpd:" opt; do
@@ -83,19 +78,11 @@ echo "projectNo="$projectNo >>$POSTDIR/config
 
 LSF_TIME_LIMIT="-W 59"
 
-if [ "$POST" == "YES" ]; then
-	mkdir -p $POSTDIR/post
-	CWD=$PWD
-	cd $POSTDIR/post
-	bsub -o LSF.00.POST5/ -J POST_$$ -R "rusage[mem=32]" $LSF_TIME_LIMIT \
-		$POSTPROCESS_SCRIPT
-	cd $CWD
-fi
+mkdir -p $POSTDIR/post
+CWD=$PWD
+cd $POSTDIR/post
+#echo bsub -o LSF.00.POST5/ -J POST_$$ -R "rusage[mem=32]" $LSF_TIME_LIMIT
 
-#if [ "$FACETS" == "YES" ]; then
-#	mkdir -p $POSTDIR/facets
-#	CWD=$PWD
-#	cd $POSTDIR/facets
-#	~/Code/Pipelines/FACETS/FACETS.app/bProcess.sh $PIPELINEDIR $PROJECTDIR
-#	cd $CWD
-#fi
+$SDIR/postProcess.sh
+
+cd $CWD
