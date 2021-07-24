@@ -1,4 +1,4 @@
-#!/juno/work/bic/socci/opt/common/CentOS_7/R/R-3.2.2/bin/Rscript --no-save --vanilla
+#!/opt/common/CentOS_7/R/R-3.6.1/bin/Rscript --no-save --vanilla
 
 suppressPackageStartupMessages(require(stringr, warn.conflicts = F))
 
@@ -11,7 +11,7 @@ getMAFHeader<-function(fname){
     colNameRow=grep("^Hugo_Symbol",header)
     if(len(colNameRow)==0){
         cat("\n\nFATAL ERROR: INVALID MAF HEADER\n\n")
-        stop("addHeaderTags.R::L-14")
+        stop("fixChromosomesToUCSC.R::L-14")
     }
 
     return(header[1:(colNameRow-1)])
@@ -36,7 +36,7 @@ parseArgs=str_match(cArgs,"(.*)=(.*)")
 dummy=apply(parseArgs,1,function(x){args[[str_trim(x[2])]]<<-str_trim(x[3])})
 
 if(is.null(args$IN)) {
-    cat("\n\tusage: addHeaderTags.R IN=input.maf [OUT=output.maf]\n")
+    cat("\n\tusage: fixChromosomesToUCSC.R IN=input.maf [OUT=output.maf]\n")
     cat("\t  default OUT=input_PPv5.txt\n\n")
     quit()
 }

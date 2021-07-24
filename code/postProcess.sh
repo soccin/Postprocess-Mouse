@@ -2,6 +2,7 @@
 
 SDIR="$( cd "$( dirname "$0" )" && pwd )"
 SVERSION=$(git --git-dir=$SDIR/../.git --work-tree=$SDIR describe --tags --dirty="-UNCOMMITED")
+echo $SVERSION
 
 export R_LIBS=/home/socci/lib/R/CentOS7/3.6.1
 RSCRIPT=/opt/common/CentOS_7/R/R-3.6.1/bin/Rscript
@@ -23,7 +24,6 @@ BAM_GENOME=$(~/Code/FillOut/FillOut/GenomeData/getGenomeBuildBAM.sh $BAM1)
 
 if [ "$MAF_GENOME" != "$BAM_GENOME" ]; then
     echo
-    echo
     echo "Mismatch in MAF($MAF_GENOME)/BAM($BAM_GENOME) genomes"
     if [ "$MAF_GENOME" == "GRCm38" ]; then
         echo "Fixing chromosome names"
@@ -36,6 +36,7 @@ if [ "$MAF_GENOME" != "$BAM_GENOME" ]; then
 else
     ln -s $MERGEDMAF preFillMAF.txt
 fi
+echo
 
 exit
 
