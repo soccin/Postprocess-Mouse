@@ -63,12 +63,9 @@ if(is.null(args$OUT)) {
 maf[,Chromosome:=paste0("chr",Chromosome)]
 maf$NCBI_Build="mm10"
 
+mafHeader=c(mafHeader,"## PostProcess-Mouse::fixChromosomeToUCSC (v2021.1)")
+
 write(mafHeader,OUTMAFFILE)
 
 write_tsv(maf,OUTMAFFILE,na="",append=T,col_names=T)
-
-# write.table(maf,file=OUTMAFFILE,row.names=F,na="",append=T,
-#     sep = "\t", quote = FALSE, col.names = T
-#     )
-
 
