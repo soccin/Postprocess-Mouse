@@ -63,7 +63,15 @@ if(is.null(args$OUT)) {
 maf[,Chromosome:=paste0("chr",Chromosome)]
 maf$NCBI_Build="mm10"
 
-mafHeader=c(mafHeader,"## PostProcess-Mouse::fixChromosomeToUCSC (v2021.1)")
+getSDIR<-function() {
+    SDIR=grep("--file=",commandArgs(),value=T)
+    SDIR=gsub(".*file=","",SDIR)
+    normalizePath(dirname(SDIR))
+}
+
+source(file.path(getSDIR(),"VERSION.R"))
+
+mafHeader=c(mafHeader,paste0("## PostProcess-Mouse::fixChromosomeToUCSC (",VERSION,")"))
 
 write(mafHeader,OUTMAFFILE)
 
