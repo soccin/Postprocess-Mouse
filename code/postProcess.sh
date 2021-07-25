@@ -38,10 +38,6 @@ else
 fi
 echo
 
-echo "HALT-41"
-
-exit
-
 # if [ ! -e ___FILLOUT.vcf ]; then
 # echo "fillOutCBE::CFILL"
 #     bsub -m commonHG ${JC_TIMELIMIT_CFILL} -o LSF.01.FILLOUT/ \
@@ -60,12 +56,15 @@ exit
 #######
 # PostProcess BIC MAF
 #
+echo "Filter targetted events"
+$SDIR/filterToTargets $SDIR/../resources/M-IMPACT_v1_mm10_targets.bed.gz maf0.txt maf1.txt
 echo
-echo "AddHeader..."
-$SDIR/addHeaderTags.R IN=$MERGEDMAF OUT=post_01.maf RevisionTAG=$SVERSION
-echo
-echo "Collapse ..."
-$SDIR/collapseNormalizedMAF.R IN=post_01.maf OUT=${PROJECTNO}_haplotect_VEP_MAF__PostV5.txt RevisionTAG=$SVERSION
+
+exit
+
+# echo
+# echo "Collapse ..."
+# $SDIR/collapseNormalizedMAF.R IN=post_01.maf OUT=${PROJECTNO}_haplotect_VEP_MAF__PostV5.txt RevisionTAG=$SVERSION
 
 #$SDIR/bSync ${LSFTAG}_FILL2
 #cat ___FILLOUT.maf | awk -F"\t" '$5 !~ /GL/{print $0}' >${PROJECTNO}___FILLOUT.V5.txt
