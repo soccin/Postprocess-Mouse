@@ -14,7 +14,7 @@ read_mafHeader<-function(fname){
 addETAGtoMAF <- function(maf) {
      mutate(maf,ETAG=paste0(
         Chromosome,":",
-        Start_Position,"-",End_Position,":",
+        Start_Position,":",
         Reference_Allele,":",Tumor_Seq_Allele2
         )
     )
@@ -30,7 +30,7 @@ addETAGtoMAF <- function(maf) {
 
 
 read_maf<-function(fname) {
-    read_tsv(fname,comment="#",col_types = cols(.default = "c")) %>%
+    read_tsv(fname,comment="#",col_types = cols(.default = "c"),na=character()) %>%
         addETAGtoMAF %>%
         mutate_at(.MAF_NUMERIC_COLS,as.numeric)
 }
@@ -45,4 +45,37 @@ write_maf<-function(maf,mafFile,mafHeader=NULL) {
         write(mafHeader,mafFile)
     }
     write_tsv(maf,mafFile,na="",append=!is.null(mafHeader),col_names=T)
+}
+
+addETAGtoGBMCFillOut<-function(fout) {
+    fout %>%
+        select(Chrom,Start,Ref,Alt) %>%
+        mutate(isDel=nchar(Ref)>1,isIns=nchar(Alt)>1) %>%
+        mutate(RefN=case_when(isDel ~ substr(Ref,2,nchar(Ref)), isIns ~ "-", T ~ Ref)) %>%
+        mutate(AltN=case_when(isDel ~ "-", isIns ~ substr(Alt,2,nchar(Alt)), T ~ Alt)) %>%
+        mutate(StartN=ifelse(isDel,Start+1,Start)) %>%
+        mutate(ETAG=paste0(Chrom,":",StartN,":",RefN,":",AltN)) %>%
+        select(Chrom,Start,Ref,Alt,ETAG)
+}
+
+read_GBMCFillOut<-function(fillFile,eTags=NULL) {
+
+    fout=read_tsv(fillFile,col_types=cols(.default = "c"),na=character()) %>%
+        mutate(Start=as.numeric(Start))
+
+    firstDataCol=(grep("Occurence_in_Normals",colnames(fout))+1)
+    dataCols=colnames(fout)[firstDataCol:ncol(fout)]
+    fout=select(fout,Chrom,Start,Ref,Alt,all_of(dataCols))
+
+    fout=left_join(fout,addETAGtoGBMCFillOut(fout),by = c("Chrom", "Start", "Ref", "Alt"))
+
+    if(!is.null(eTags)) {
+        fout=fout %>% filter(ETAG %in% eTags)
+    }
+
+    fout %>%
+        gather(Sample,Value,all_of(dataCols)) %>%
+        separate_rows(Value,sep=";") %>%
+        separate(Value,c("Field","Value"),sep="=")
+
 }
