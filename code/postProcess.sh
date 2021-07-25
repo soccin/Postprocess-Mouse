@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SDIR="$( cd "$( dirname "$0" )" && pwd )"
-SVERSION=$(git --git-dir=$SDIR/../.git --work-tree=$SDIR describe --tags --dirty="-UNCOMMITED")
+SVERSION=$(git --git-dir=$SDIR/../.git describe --tags --always --long --dirty="-UNCOMMITED")
 echo $SVERSION
 
 export R_LIBS=/home/socci/lib/R/CentOS7/3.6.1
