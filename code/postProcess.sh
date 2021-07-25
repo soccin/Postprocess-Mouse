@@ -27,16 +27,18 @@ if [ "$MAF_GENOME" != "$BAM_GENOME" ]; then
     echo "Mismatch in MAF($MAF_GENOME)/BAM($BAM_GENOME) genomes"
     if [ "$MAF_GENOME" == "GRCm38" ]; then
         echo "Fixing chromosome names"
-        $SDIR/fixChromosomesToUCSC.R IN=$MERGEDMAF OUT=preFillMAF.txt
+        $SDIR/fixChromosomesToUCSC.R IN=$MERGEDMAF OUT=maf0.txt
     else
         echo
         echo
         exit -1
     fi
 else
-    ln -s $MERGEDMAF preFillMAF.txt
+    ln -s $MERGEDMAF maf0.txt
 fi
 echo
+
+echo "HALT-41"
 
 exit
 
@@ -45,7 +47,7 @@ exit
 #     bsub -m commonHG ${JC_TIMELIMIT_CFILL} -o LSF.01.FILLOUT/ \
 #       -J ${LSFTAG}_CFILL -n 24 -R "rusage[mem=22]" \
 #         ~/Code/FillOut/FillOut/fillOutCBE.sh \
-#           $BAMDIR preFillMAF.txt ___FILLOUT.vcf
+#           $BAMDIR maf0.txt ___FILLOUT.vcf
 # fi
 
 # echo "vcf2MultiMAF::FILL2"

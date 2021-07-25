@@ -33,13 +33,22 @@ bed4Cols=cols(
 targets=read_tsv(TARGETS,col_names=c("chr","start","end","DAT"),col_types=bed4Cols)
 
 mafHeader=getMAFHeader(INPUT_MAFFILE)
-maf=read_tsv(INPUT_MAFFILE,comment="#",col_types = cols(.default = "c")) %>%
-    mutate(ETAG=paste0(
-        Chromosome,":",
-        Start_Position,"-",End_Position,":",
-        Reference_Allele,":",Tumor_Seq_Allele2
-        )
-    )
+maf=read_tsv(INPUT_MAFFILE,comment="#",col_types = cols(.default = "c"))
+
+halt()
+
+ # %>%
+
+
+
+ #    mutate(ETAG=paste0(
+ #        Chromosome,":",
+ #        Start_Position,"-",End_Position,":",
+ #        Reference_Allele,":",Tumor_Seq_Allele2
+ #        )
+ #    )
+
+
 
 maf.events=maf %>% select(chr=Chromosome,start=Start_Position,end=End_Position,ETAG) %>%
     mutate(start=as.numeric(start),end=as.numeric(end)) %>%
