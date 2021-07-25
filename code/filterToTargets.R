@@ -10,7 +10,25 @@ suppressPackageStartupMessages({
     require(tidygenomics)
     })
 
+SDIR=Sys.getenv("SDIR")
+
+source(file.path(SDIR,"tools.R"))
+source(file.path(SDIR,"mafFilters.R"))
+source(file.path(SDIR,"VERSION.R"))
+
+################################################################################
+# Parse args
+################################################################################
+
 TARGETS=args[1]
+
+if(grepl(":",TARGETS)) {
+    TARGET_TAG=strsplit(TARGETS,":")[[1]][1]
+    TARGETS=strsplit(TARGETS,":")[[1]][2]
+} else {
+    TARGET_TAG=gsub("_targets.*","",basename(TARGETS))
+}
+
 INPUT_MAFFILE=args[2]
 
 if(len(args)==3) {
@@ -19,9 +37,10 @@ if(len(args)==3) {
     OUTPUT_MAFFILE=cc(basename(INPUT_MAFFILE),"FilterToTargets.txt")
 }
 
-SDIR=Sys.getenv("SDIR")
 
-source(file.path(SDIR,"tools.R"))
+################################################################################
+# Get target regions
+################################################################################
 
 bed4Cols=cols(
   chr = col_character(),
@@ -32,29 +51,17 @@ bed4Cols=cols(
 
 targets=read_tsv(TARGETS,col_names=c("chr","start","end","DAT"),col_types=bed4Cols)
 
-mafHeader=getMAFHeader(INPUT_MAFFILE)
-maf=read_tsv(INPUT_MAFFILE,comment="#",col_types = cols(.default = "c"))
+################################################################################
+# Process MAF
+################################################################################
 
-halt()
+mafHeader=read_mafHeader(INPUT_MAFFILE)
+maf=read_maf(INPUT_MAFFILE)
 
- # %>%
+maf.f=filter.TargettedEvents(maf,targets) %>% dropEmptyColumns
 
+mafHeader=c(mafHeader,"## PostProcess-Mouse::filterToTargets (v2021.1) targets:M-IMPACT_v1_mm10")
 
-
- #    mutate(ETAG=paste0(
- #        Chromosome,":",
- #        Start_Position,"-",End_Position,":",
- #        Reference_Allele,":",Tumor_Seq_Allele2
- #        )
- #    )
+write_maf(maf.f,OUTPUT_MAFFILE,mafHeader)
 
 
-
-maf.events=maf %>% select(chr=Chromosome,start=Start_Position,end=End_Position,ETAG) %>%
-    mutate(start=as.numeric(start),end=as.numeric(end)) %>%
-    distinct
-
-
-events_targetted=genome_intersect(maf.events,targets) %>% filter(!grepl("^rs\\d+",DAT))
-
-maf.filt=maf %>% filter(ETAG %in% events_targetted$ETAG)
