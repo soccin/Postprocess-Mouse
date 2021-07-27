@@ -1,17 +1,17 @@
-ctrl.UCSF_F1B6SV129_1_N:/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_UCSF_F1B6SV129_1_N.bam
-ctrl.TJL_BL6_WT_2_N:/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_BL6_WT_2_N.bam
-ctrl.TJL_NGS_WT_2_N:/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_NGS_WT_2_N.bam
-ctrl.TJL_FVB_WT_1_N:/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_FVB_WT_1_N.bam
-ctrl.TJL_NGS_WT_5_N:/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_NGS_WT_5_N.bam
-ctrl.TJL_NGS_WT_4_N:/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_NGS_WT_4_N.bam
-ctrl.TJL_BL6_WT_1_N:/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_BL6_WT_1_N.bam
-ctrl.TJL_BL6_WT_3_N:/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_BL6_WT_3_N.bam
-ctrl.UCSF_F1B6SV129_3_N:/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_UCSF_F1B6SV129_3_N.bam
-ctrl.TJL_FVB_WT_3_N:/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_FVB_WT_3_N.bam
-ctrl.TJL_NGS_WT_3_N:/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_NGS_WT_3_N.bam
-ctrl.TJL_NGS_WT_1_N:/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_NGS_WT_1_N.bam
-ctrl.TJL_FVB_WT_4_N:/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_FVB_WT_4_N.bam
-ctrl.TJL_BL6_WT_5_N:/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_BL6_WT_5_N.bam
-ctrl.UCSF_F1B6SV129_2_N:/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_UCSF_F1B6SV129_2_N.bam
-ctrl.TJL_FVB_WT_2_N:/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_FVB_WT_2_N.bam
-ctrl.TJL_BL6_WT_4_N:/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_BL6_WT_4_N.bam
+ctrl.UCSF_F1B6SV129_1_N	/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_UCSF_F1B6SV129_1_N.bam
+ctrl.TJL_BL6_WT_2_N	/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_BL6_WT_2_N.bam
+ctrl.TJL_NGS_WT_2_N	/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_NGS_WT_2_N.bam
+ctrl.TJL_FVB_WT_1_N	/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_FVB_WT_1_N.bam
+ctrl.TJL_NGS_WT_5_N	/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_NGS_WT_5_N.bam
+ctrl.TJL_NGS_WT_4_N	/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_NGS_WT_4_N.bam
+ctrl.TJL_BL6_WT_1_N	/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_BL6_WT_1_N.bam
+ctrl.TJL_BL6_WT_3_N	/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_BL6_WT_3_N.bam
+ctrl.UCSF_F1B6SV129_3_N	/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_UCSF_F1B6SV129_3_N.bam
+ctrl.TJL_FVB_WT_3_N	/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_FVB_WT_3_N.bam
+ctrl.TJL_NGS_WT_3_N	/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_NGS_WT_3_N.bam
+ctrl.TJL_NGS_WT_1_N	/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_NGS_WT_1_N.bam
+ctrl.TJL_FVB_WT_4_N	/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_FVB_WT_4_N.bam
+ctrl.TJL_BL6_WT_5_N	/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_BL6_WT_5_N.bam
+ctrl.UCSF_F1B6SV129_2_N	/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_UCSF_F1B6SV129_2_N.bam
+ctrl.TJL_FVB_WT_2_N	/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_FVB_WT_2_N.bam
+ctrl.TJL_BL6_WT_4_N	/juno/res/delivery/vialea/soccin/Proj_06000_AT/r_001/alignments/Proj_06000_AT_indelRealigned_recal_s_TJL_BL6_WT_4_N.bam
