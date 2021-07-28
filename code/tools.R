@@ -36,6 +36,14 @@ read_maf<-function(fname) {
         mutate_at(.MAF_NUMERIC_COLS,as.numeric)
 }
 
+write_maf<-function(maf,mafFile,mafHeader=NULL) {
+    if(!is.null(mafHeader)) {
+        write(mafHeader,mafFile)
+    }
+    maf=maf %>% mutate_if(is.character,~replace(., .=="", NA))
+    write_tsv(maf,mafFile,na="",append=!is.null(mafHeader),col_names=T)
+}
+
 TCGA.Max.Col=34
 dropEmptyColumns<-function(tbl) {
     allEmptyCols=which(apply(tbl,2,function(x){all(x=="" | is.na(x))}))
@@ -45,12 +53,6 @@ dropEmptyColumns<-function(tbl) {
     select(tbl,-all_of(allEmptyCols))
 }
 
-write_maf<-function(maf,mafFile,mafHeader=NULL) {
-    if(!is.null(mafHeader)) {
-        write(mafHeader,mafFile)
-    }
-    write_tsv(maf,mafFile,na="",append=!is.null(mafHeader),col_names=T)
-}
 
 addETAGtoGBMCFillOut<-function(fout) {
     fout %>%
