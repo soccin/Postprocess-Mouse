@@ -126,13 +126,17 @@ mafHC=mafHC %>%
         ) %>%
     dropEmptyColumns
 
+gTagNames=names(git2r::tags(SDIR))
+
 GITTAG=paste0(
-    names(git2r::tags(SDIR)),"-g",
+    gTagNames[len(gTagNames)],"-g",
     substr(git2r::commits(SDIR)[[1]]$sha,1,8)
     )
+
 mafHeader=c(mafHeader,
     paste0("## PostProcess-Mouse::makeFinalMaf (v2021.1) [",GITTAG,"]")
     )
+
 write_maf(maf1,paste0(OUTPUT_MAFFILE,".txt"),mafHeader)
 
 mafHC=mafHC[,setdiff(colnames(mafHC),names(which(apply(maf1,2,function(x){len(unique(x))})==1)))]

@@ -90,8 +90,8 @@ echo
 
 echo
 echo "#####"
-echo "AddNormalFillData"
-$SDIR/makeFinalMaf maf2.txt
+echo "makeFinalMAF"
+$SDIR/makeFinalMAF maf2.txt
 echo
 
 # echo
