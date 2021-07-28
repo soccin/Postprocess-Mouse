@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SDIR="$( cd "$( dirname "$0" )" && pwd )"
+export SDIR="$( cd "$( dirname "$0" )" && pwd )"
 SVERSION=$(git --git-dir=$SDIR/../.git describe --tags --always --long)
 echo $SVERSION
 
@@ -56,11 +56,37 @@ echo
 #######
 # PostProcess BIC MAF
 #
+echo
+echo "#####"
 echo "Filter targetted events"
 $SDIR/filterToTargets $SDIR/../resources/M-IMPACT_v1_mm10_targets.bed.gz maf0.txt maf1.txt
 echo
 
-exit
+echo
+echo "#####"
+echo "Get fillout"
+Rscript --no-save /juno/home/socci/Code/FillOut/FillOut21/makeMinimalMaf.R maf1.txt
+ls $BAMDIR/*bam >bamList
+cat bamList | sed 's/.*_s_/s_/' | sed 's/.bam//' >sids
+paste sids bamList >bam_fof
+cat \
+    $SDIR/../resources/mouseControlSamples_210724.txt \
+    $SDIR/../resources/mousePooledNormalBams_210724.txt \
+    >>bam_fof
+
+/juno/home/socci/Code/FillOut/FillOut21/bin/GetBaseCountsMultiSample \
+    --thread 24 \
+    --filter_improper_pair 0 \
+    --fasta /juno/depot/assemblies/M.musculus/mm10/mm10.fasta \
+    --maf maf1_minMaf.maf \
+    --output minimaFillOut.out \
+    --bam_fof bam_fof
+
+echo
+echo "#####"
+echo "AddNormalFillData"
+$SDIR/addNormalFillData.R maf1.txt minimaFillOut.out maf2.txt
+echo
 
 # echo
 # echo "Collapse ..."

@@ -1,3 +1,4 @@
+
 read_mafHeader<-function(fname){
 
     header=readLines(fname,100)
@@ -35,9 +36,13 @@ read_maf<-function(fname) {
         mutate_at(.MAF_NUMERIC_COLS,as.numeric)
 }
 
+TCGA.Max.Col=34
 dropEmptyColumns<-function(tbl) {
-    allNACols=names(which(apply(tbl,2,function(x){all(is.na(x))})))
-    select(tbl,-all_of(allNACols))
+    allEmptyCols=which(apply(tbl,2,function(x){all(x=="" | is.na(x))}))
+    #
+    # Do not remove TCGA cols (1-34)
+    allEmptyCols=names(which(allEmptyCols>TCGA.Max.Col))
+    select(tbl,-all_of(allEmptyCols))
 }
 
 write_maf<-function(maf,mafFile,mafHeader=NULL) {
@@ -76,6 +81,7 @@ read_GBMCFillOut<-function(fillFile,eTags=NULL) {
     fout %>%
         gather(Sample,Value,all_of(dataCols)) %>%
         separate_rows(Value,sep=";") %>%
-        separate(Value,c("Field","Value"),sep="=")
+        separate(Value,c("Field","Value"),sep="=") %>%
+        mutate(Value=as.numeric(Value))
 
 }
