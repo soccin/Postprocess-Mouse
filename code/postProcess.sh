@@ -85,7 +85,7 @@ cat \
 echo
 echo "#####"
 echo "AddNormalFillData"
-$SDIR/addNormalFillData.R maf1.txt minimaFillOut.out maf2.txt
+$SDIR/addNormalFillData maf1.txt minimaFillOut.out maf2.txt
 echo
 
 # echo

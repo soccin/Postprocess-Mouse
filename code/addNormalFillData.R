@@ -72,10 +72,10 @@ ff.pool=fillout %>%
     filter(maxVF>=0) %>%
     rename_at(-1,~cc("POOL",.))
 
-maf1=left_join(maf,ff.samp,by="ETAG") %>% left_join(ff.pool,by="ETAG")
+omaf=left_join(maf,ff.samp,by="ETAG") %>% left_join(ff.pool,by="ETAG")
 
 mafHeader=c(mafHeader,"## PostProcess-Mouse::addNormalFillData (v2021.1)")
-write_maf(maf.f,OUTPUT_MAFFILE,mafHeader)
+write_maf(omaf,OUTPUT_MAFFILE,mafHeader)
 
 #-10*pbinom(VAF=0.106,2,CTRLS_tVAF=0.00175,lower.tail=F,log=T)
 
