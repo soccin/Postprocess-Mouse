@@ -1,3 +1,24 @@
+suppressPackageStartupMessages({
+    require(fs)
+})
+
+read_postConfig<-function() {
+    config=list()
+    xx=readLines("../config")
+    parseConfig=str_match(xx,"(.*)=(.*)")
+    for(ii in seq(nrow(parseConfig))) {
+        config[[parseConfig[ii,2]]]=parseConfig[ii,3]
+    }
+    config
+}
+
+
+get_TumorSampleIDs<-function(pipeLineDir) {
+    pairFile=dir_ls(pipeLineDir,regex="_sample_pairing.txt")
+    samps=read_tsv(pairFile,col_names=c("Normal","Tumor"),col_types = cols(.default = "c"))
+    tumors=setdiff(samps$Tumor,samps$Normal)
+    tumors
+}
 
 read_mafHeader<-function(fname){
 
@@ -25,8 +46,7 @@ addETAGtoMAF <- function(maf) {
     "Start_Position", "End_Position",
     "t_depth", "t_ref_count", "t_alt_count",
     "n_depth", "n_ref_count", "n_alt_count",
-    "t_var_freq", "n_var_freq",
-    "DISTANCE"
+    "t_var_freq", "n_var_freq"
     )
 
 
@@ -87,3 +107,4 @@ read_GBMCFillOut<-function(fillFile,eTags=NULL) {
         mutate(Value=as.numeric(Value))
 
 }
+

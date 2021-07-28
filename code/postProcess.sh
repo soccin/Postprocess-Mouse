@@ -88,6 +88,12 @@ echo "AddNormalFillData"
 $SDIR/addNormalFillData maf1.txt minimaFillOut.out maf2.txt
 echo
 
+echo
+echo "#####"
+echo "AddNormalFillData"
+$SDIR/makeFinalMaf maf2.txt
+echo
+
 # echo
 # echo "Collapse ..."
 # $SDIR/collapseNormalizedMAF.R IN=post_01.maf OUT=${PROJECTNO}_haplotect_VEP_MAF__PostV5.txt RevisionTAG=$SVERSION
