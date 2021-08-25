@@ -139,7 +139,14 @@ mafHeader=c(mafHeader,
 
 write_maf(maf1,paste0(OUTPUT_MAFFILE,".txt"),mafHeader)
 
-mafHC=mafHC[,setdiff(colnames(mafHC),names(which(apply(maf1,2,function(x){len(unique(x))})==1)))]
+degenCols=names(which(apply(maf1,2,function(x){len(unique(x))})==1))
+
+requiredCols=c("Matched_Norm_Sample_Barcode")
+degenCols=setdiff(degenCols,requiredCols)
+
+hcCols=setdiff(colnames(mafHC),degenCols)
+
+mafHC=mafHC[,hcCols]
 
 params=bind_rows(
     tibble(KEY="PROGRAM",VALUE="makeFinalMAF.R"),
