@@ -20,6 +20,31 @@ get_TumorSampleIDs<-function(pipeLineDir) {
     tumors
 }
 
+#' get_CohortNormalIDs
+#'
+#' The cohort normals are the matched normals from the project.
+#' They are both paired with their matched tumor and are also
+#' paired against the normal pool to look for potential artifacts
+#' and strain/germlin events
+#'
+#' @param pipeLineDir path to pipeline output directory
+#' @return list of normal sample IDs
+#'
+get_CohortNormalIDs<-function(pipeLineDir) {
+    pairFile=dir_ls(pipeLineDir,regex="_sample_pairing.txt")
+    samps=read_tsv(pairFile,col_names=c("Normal","Tumor"),col_types = cols(.default = "c"))
+    #
+    # The cohort normals show up as both normals and tumors
+    # e.g.:
+    #      NormA        TumorA
+    #      PooledNormal NormA
+    #
+    normals=intersect(samps$Tumor,samps$Normal)
+    normals
+
+}
+
+
 read_mafHeader<-function(fname){
 
     header=readLines(fname,100)
