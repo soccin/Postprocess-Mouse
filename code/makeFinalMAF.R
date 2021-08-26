@@ -22,7 +22,7 @@ convertGeneSymbolsMouseToHuman <- function(mgg) {
 # Parse args
 ################################################################################
 
-if(!interactive()) source("~/.Rprofile")
+if(!exists("len")) source("~/.Rprofile")
 args=commandArgs(trailing=T)
 if(len(args)<1) {
     cat("\n\tusage: addNormalFillData.R INPUT.maf [OUTPUT_BASE]\n\n")
@@ -42,7 +42,6 @@ source(file.path(SDIR,"mafFilters.R"))
 source(file.path(SDIR,"VERSION.R"))
 
 ################################################################################
-# Parse args
 ################################################################################
 
 # Read config file
@@ -54,10 +53,11 @@ INPUT_MAFFILE=args[1]
 if(len(args)==2) {
     OUTPUT_MAFFILE=args[2]
 } else {
-    OUTPUT_MAFFILE=cc("Proj",config$projectNo,"VEP_MAF_","PostV6a")
+    OUTPUT_MAFFILE=cc("Proj",config$projectNo,"VEP_MAF_","PostV6b")
 }
 
 tumors=get_TumorSampleIDs(config$PIPELINEDIR)
+cohortNormals=get_CohortNormalIDs(config$PIPELINEDIR)
 
 ################################################################################
 # Read MAF
@@ -76,7 +76,7 @@ numeric.cols=vars(matches("^Normal_CTRLS_|^POOL_"))
 
 maf1=maf %>%
     filter(Tumor_Sample_Barcode %in% tumors) %>%
-    left_join(cohort.stats) %>%
+    left_join(cohort.stats,by="ETAG") %>%
     mutate_at(numeric.cols,as.numeric) %>%
     mutate(FILTER="PASS",FILTER.REASON="") %>%
     mutate(BINOM.pv=pbinom(t_var_freq,2,(POOL_tAD+1)/(POOL_tDP+1),lower=F)) %>%
@@ -104,6 +104,45 @@ maf1$FILTER.REASON[ii.f]=paste(maf1$FILTER.REASON[ii.f],"PresentInControls",sep=
 ii.f=which(!(maf1$BINOM.lor>log10(10) & maf1$BINOM.fdr<.2))
 maf1$FILTER[ii.f]="REMOVE"
 maf1$FILTER.REASON[ii.f]=paste(maf1$FILTER.REASON[ii.f],"PresentInPool",sep=",")
+
+halt("DDDD")
+
+#
+# Mark events that were also detected in any one of the
+# cohort normals
+#
+
+cohortNormalEvents=maf %>%
+    filter(Tumor_Sample_Barcode %in% cohortNormals) %>%
+    filter(t_var_freq>0.10 & t_alt_count>=10) %>%
+    select(ETAG,Tumor_Sample_Barcode,Matched_Norm_Sample_Barcode,matches("[tn]_(count|depth)|t_var_freq")) %>%
+    rename_at(-1,~paste0("CohortNormal.",.))
+
+ii.f=which(maf1$ETAG %in% cohortNormalEvents$ETAG)
+
+#
+# Since we may not always want to filter these out
+# create a table with them so it is easy to see what was
+# removed with this filter
+#
+
+cohorNormalFilteredEvents=maf1[ii.f,] %>%
+    filter(FILTER.REASON=="") %>%
+    select(
+            Tumor_Sample_Barcode,Matched_Norm_Sample_Barcode,
+            Hugo_Symbol,Chromosome,Start_Position,Variant_Classification,
+            Reference_Allele,matches("[tn]_(count|depth)|t_var_freq"),ETAG
+            ) %>%
+    left_join(cohortNormalEvents,by="ETAG") %>%
+    arrange(desc(CohortNormal.t_alt_count)) %>%
+    distinct(ETAG,Tumor_Sample_Barcode,.keep_all=T)
+
+maf1$FILTER[ii.f]="REMOVE"
+maf1$FILTER.REASON[ii.f]=paste(maf1$FILTER.REASON[ii.f],"PresentInCohortNormal",sep=",")
+
+#
+# Clean up the filter reason
+#
 
 maf1=maf1 %>% mutate(FILTER.REASON=gsub("^,","",FILTER.REASON))
 
@@ -158,7 +197,8 @@ params=bind_rows(
 
 tbl=list(
     maf_Filter8=mafHC,
-    maf_UnFiltered=maf1 %>% filter(HGVSp!="" & HGVSp!="p.="),
+    UnFilt_NonSilent=maf1 %>% filter(HGVSp!="" & HGVSp!="p.="),
+    cohortNormalFilter=cohorNormalFilteredEvents,
     PARAMS=params
     )
 
