@@ -9,11 +9,6 @@ RSCRIPT=/opt/common/CentOS_7/R/R-3.6.1/bin/Rscript
 
 . ../config
 
-#
-# Need pairing file to get cohort normals
-#
-cp $PIPELINEDIR/*_sample_pairing.txt .
-
 LSFTAG=$(uuidgen)
 
 PROJECTNO=$(echo $PROJECTDIR | perl -ne 'm|(Proj_[^/]*)|; print $1')
