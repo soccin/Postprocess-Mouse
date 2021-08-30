@@ -44,12 +44,27 @@ get_CohortNormalIDs<-function(pipeLineDir) {
 
     pairedAgainstPool=unique(samps$Tumor[grep("POOL.*NORM",samps$Normal)])
     if(len(normals)!=len(pairedAgainstPool)) {
+
+        tumors=samps %>% filter(!grepl("POOLED",Normal)) %>% pull(Tumor)
+        normals=samps %>% filter(Tumor %in% tumors) %>% distinct(Normal) %>% pull(Normal)
+        manifest=
+            tibble(SAMPLE=unique(c(samps$Normal,samps$Tumor)),TYPE="") %>%
+            mutate(TYPE=case_when(
+                                    SAMPLE %in% tumors ~ "T",
+                                    SAMPLE %in% normals ~ "N",
+                                    grepl("POOLED",SAMPLE) ~ "P",
+                                    T ~ "x"
+                                ))
+
+        write_csv(manifest,"_sample_manifest.csv")
+
         cat("\n\n    FATAL ERROR: Detection of Normal Samples Failed\n\n")
         cat("        normals  =",paste0(normals,collapse=", "),"\n")
         cat("        normals2 =",paste0(pairedAgainstPool,collapse=", "),"\n")
         cat("\n")
         cat("\n    Need to specify explict manifest file to indicate tumors/normals\n\n")
         stop("FATAL:ERROR:tools:get_CohortNormalIDs")
+
     }
 
     normals
