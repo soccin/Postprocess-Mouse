@@ -25,8 +25,15 @@ convertGeneSymbolsMouseToHuman <- function(mgg) {
 if(!exists("len")) source("~/.Rprofile")
 args=commandArgs(trailing=T)
 if(len(args)<1) {
-    cat("\n\tusage: addNormalFillData.R INPUT.maf [OUTPUT_BASE]\n\n")
+    cat("\n\tusage: addNormalFillData.R [MANIFEST=MANIFESTFILE] INPUT.maf [OUTPUT_BASE]\n\n")
     quit()
+}
+
+MANIFEST_FILE=NULL
+ii=grep("MANIFEST=",args)
+if(len(ii)==1) {
+    MANIFEST_FILE=gsub(".*=","",args[ii])
+    args=args[-ii]
 }
 
 suppressPackageStartupMessages({
@@ -56,8 +63,14 @@ if(len(args)==2) {
     OUTPUT_MAFFILE=cc("Proj",config$projectNo,"VEP_MAF_","PostV6b")
 }
 
-tumors=get_TumorSampleIDs(config$PIPELINEDIR)
-cohortNormals=get_CohortNormalIDs(config$PIPELINEDIR)
+if(is.null(MANIFEST_FILE)) {
+    tumors=get_TumorSampleIDs(config$PIPELINEDIR)
+    cohortNormals=get_CohortNormalIDs(config$PIPELINEDIR)
+} else {
+    manifest=read_csv(MANIFEST_FILE)
+    tumors=manifest %>% filter(TYPE=="T")  %>% distinct(SAMPLE) %>% pull
+    cohortNormals=manifest %>% filter(TYPE=="N")  %>% distinct(SAMPLE) %>% pull
+}
 
 cat("\n\n")
 cat("   Tumors =", paste(tumors),"\n\n")
