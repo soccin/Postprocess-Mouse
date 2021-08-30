@@ -59,6 +59,10 @@ if(len(args)==2) {
 tumors=get_TumorSampleIDs(config$PIPELINEDIR)
 cohortNormals=get_CohortNormalIDs(config$PIPELINEDIR)
 
+cat("\n\n")
+cat("   Tumors =", paste(tumors),"\n\n")
+cat("   Cohort Normals =", paste(cohortNormals),"\n\n")
+
 ################################################################################
 # Read MAF
 ################################################################################
@@ -193,7 +197,10 @@ params=bind_rows(
     tibble(KEY="GIT",VALUE=GITTAG),
     tibble(KEY="DATE",VALUE=DATE()),
     tibble(KEY="INPUT",VALUE=INPUT_MAFFILE),
-    tibble(KEY="OUTPUT",VALUE=OUTPUT_MAFFILE))
+    tibble(KEY="OUTPUT",VALUE=OUTPUT_MAFFILE),
+    tibble(KEY="TUMORS",VALUE=paste(tumors,collapse=",")),
+    tibble(KEY="COHORT_NORMALS",VALUE=paste(cohortNormals,collapse=","))
+    )
 
 tbl=list(
     maf_Filter8=mafHC,
