@@ -38,21 +38,6 @@ else
 fi
 echo
 
-# if [ ! -e ___FILLOUT.vcf ]; then
-# echo "fillOutCBE::CFILL"
-#     bsub -m commonHG ${JC_TIMELIMIT_CFILL} -o LSF.01.FILLOUT/ \
-#       -J ${LSFTAG}_CFILL -n 24 -R "rusage[mem=22]" \
-#         ~/Code/FillOut/FillOut/fillOutCBE.sh \
-#           $BAMDIR maf0.txt ___FILLOUT.vcf
-# fi
-
-# echo "vcf2MultiMAF::FILL2"
-# bsub -m commonHG ${JC_TIMELIMIT_LONG} -o LSF.02.FILL2VCF/ \
-#     -J ${LSFTAG}_FILL2 -w "post_done(${LSFTAG}_CFILL)" \
-#     -n 12 -R "rusage[mem=22]" \
-#     $SDIR/vcf2MultiMAF.sh ___FILLOUT.vcf $BAM_GENOME
-
-
 #######
 # PostProcess BIC MAF
 #
