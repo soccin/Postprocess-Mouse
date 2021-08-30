@@ -26,7 +26,7 @@ while getopts "fpd:m:" opt; do
 		PROJECTDIR=$OPTARG
 		;;
 	m)
-		MANIFESTFILE="-m $OPTARG"
+		MANIFESTFILE="-m  $(realpath $OPTARG)"
 		;;
 	\?)
 		usage;
