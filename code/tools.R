@@ -1,5 +1,6 @@
 suppressPackageStartupMessages({
     require(fs)
+    require(readr)
 })
 
 read_postConfig<-function() {
@@ -40,8 +41,18 @@ get_CohortNormalIDs<-function(pipeLineDir) {
     #      PooledNormal NormA
     #
     normals=intersect(samps$Tumor,samps$Normal)
-    normals
 
+    pairedAgainstPool=unique(samps$Tumor[grep("POOL.*NORM",samps$Normal)])
+    if(len(normals)!=len(pairedAgainstPool)) {
+        cat("\n\n    FATAL ERROR: Detection of Normal Samples Failed\n\n")
+        cat("        normals  =",paste0(normals,collapse=", "),"\n")
+        cat("        normals2 =",paste0(pairedAgainstPool,collapse=", "),"\n")
+        cat("\n")
+        cat("\n    Need to specify explict manifest file to indicate tumors/normals\n\n")
+        stop("FATAL:ERROR:tools:get_CohortNormalIDs")
+    }
+
+    normals
 }
 
 
