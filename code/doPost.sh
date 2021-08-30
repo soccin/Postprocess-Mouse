@@ -5,12 +5,14 @@ SDIR="$( cd "$( dirname "$0" )" && pwd )"
 POSTPROCESS_SCRIPT=/home/socci/Work/LUNA/Work/PostProcess/Mouse/Version5/PostProcess_V5-Mouse/doPostProcessV5.sh
 
 function usage {
-    echo "usage: doPost.sh [-f] [-p] [-d PROJECTDIR] pipelineOutputDir"
+    echo "usage: doPost.sh [-f] [-p] [-m MANIFEST] [-d PROJECTDIR] pipelineOutputDir"
+	echo "    -m specify manifest file (tumor/normal assignments)"
 	echo "    -d explicitly set projectDirectory"
 }
 
 PROJECTDIR=""
-while getopts "fpd:" opt; do
+MANIFESTFILE=""
+while getopts "fpd:m:" opt; do
 	case $opt in
 	f)
 		echo "Turning FACETS _ON_"
@@ -22,6 +24,9 @@ while getopts "fpd:" opt; do
 		;;
 	d)
 		PROJECTDIR=$OPTARG
+		;;
+	m)
+		MANIFESTFILE="-m $OPTARG"
 		;;
 	\?)
 		usage;
@@ -83,6 +88,6 @@ CWD=$PWD
 cd $POSTDIR/post
 #echo bsub -o LSF.00.POST5/ -J POST_$$ -R "rusage[mem=32]" $LSF_TIME_LIMIT
 
-$SDIR/postProcess.sh
+$SDIR/postProcess.sh $MANIFESTFILE
 
 cd $CWD

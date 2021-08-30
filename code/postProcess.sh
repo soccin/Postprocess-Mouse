@@ -9,6 +9,19 @@ RSCRIPT=/opt/common/CentOS_7/R/R-3.6.1/bin/Rscript
 
 . ../config
 
+MANIFESTFILE=""
+while getopts "fpd:m:" opt; do
+    case $opt in
+    m)
+        MANIFESTFILE="MANIFEST=$OPTARG"
+        ;;
+    \?)
+        usage;
+        exit
+    esac
+done
+shift $((OPTIND-1))
+
 LSFTAG=$(uuidgen)
 
 PROJECTNO=$(echo $PROJECTDIR | perl -ne 'm|(Proj_[^/]*)|; print $1')
@@ -76,7 +89,7 @@ echo
 echo
 echo "#####"
 echo "makeFinalMAF"
-$SDIR/makeFinalMAF maf2.txt
+$SDIR/makeFinalMAF $MANIFESTFILE maf2.txt
 echo
 
 # echo
