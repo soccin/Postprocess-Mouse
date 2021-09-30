@@ -51,13 +51,27 @@ else
 fi
 echo
 
+MIMPACTVERSION="M-IMPACT_v2"
+#######
+# Load resources
+#
+if [ "$MIMPACTVERSION" == "M-IMPACT_v2" ]; then
+    . $SDIR/resources.sh
+else
+    echo
+    echo "Unknown Version of M-IMPACT [$MIMPACTVERSION]"
+    echo
+    exit 1
+fi
+
+
 #######
 # PostProcess BIC MAF
 #
 echo
 echo "#####"
 echo "Filter targetted events"
-$SDIR/filterToTargets $SDIR/../resources/M-IMPACT_v1_mm10_targets.bed.gz maf0.txt maf1.txt
+$SDIR/filterToTargets $MIMPACT_TARGETS maf0.txt maf1.txt
 echo
 
 echo
@@ -68,8 +82,8 @@ ls $BAMDIR/*bam >bamList
 cat bamList | sed 's/.*_s_/s_/' | sed 's/.bam//' >sids
 paste sids bamList >bam_fof
 cat \
-    $SDIR/../resources/mouseControlSamples_210724.txt \
-    $SDIR/../resources/mousePooledNormalBams_210724.txt \
+    $MIMPACT_CTRL_SAMPLES \
+    $MIMPACT_POOL_SAMPLES \
     >>bam_fof
 
 /juno/home/socci/Code/FillOut/FillOut21/bin/GetBaseCountsMultiSample \
