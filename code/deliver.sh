@@ -34,7 +34,7 @@ You can access them on the BIC Delivery server at:
 
   https://bicdelivery.mskcc.org/project/${PROJECTNO/Proj_/}/variants/r_001
 
-There is a brief writeup of the various output files is attached below. In addition to the full pipeline output in the above folders attached is an excel file which as filtered mutation list echo to contain just those events that:
+There is a brief writeup of the various output files is attached below. In addition to the full pipeline output in the above folders attached is an excel file which has filtered mutation list echo to contain just those events that:
 
     (1) Will change the protein sequence (mis/non-sense, splice-site)
 
