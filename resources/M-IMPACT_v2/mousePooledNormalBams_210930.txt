@@ -1,0 +1,1 @@
+ctrl.pool.A	/juno/work/bic/shared/resources/Mouse/M-IMPACT/M-IMPACT_v2/MousePooledNormals/leviner/milesl/Proj_12308/r_001/alignments/Proj_12308_indelRealigned_recal_s_MOUSEPOOLEDNORMAL.bam
