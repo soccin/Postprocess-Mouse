@@ -63,6 +63,11 @@ get_CohortNormalIDs<-function(pipeLineDir) {
         cat("        normals2 =",paste0(pairedAgainstPool,collapse=", "),"\n")
         cat("\n")
         cat("\n    Need to specify explict manifest file to indicate tumors/normals\n\n")
+        cat("           MANIFEST.CSV:\n")
+        cat("            SAMPLE,TYPE\n")
+        cat("            S1,T\n")
+        cat("            S2,N\n")
+        cat("\n")
         stop("FATAL:ERROR:tools:get_CohortNormalIDs")
 
     }
