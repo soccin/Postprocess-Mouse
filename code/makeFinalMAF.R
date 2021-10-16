@@ -122,8 +122,6 @@ ii.f=which(!(maf1$BINOM.lor>log10(10) & maf1$BINOM.fdr<.2))
 maf1$FILTER[ii.f]="REMOVE"
 maf1$FILTER.REASON[ii.f]=paste(maf1$FILTER.REASON[ii.f],"PresentInPool",sep=",")
 
-halt("DDDD")
-
 #
 # Mark events that were also detected in any one of the
 # cohort normals
@@ -197,7 +195,7 @@ write_maf(maf1,paste0(OUTPUT_MAFFILE,".txt"),mafHeader)
 
 degenCols=names(which(apply(maf1,2,function(x){len(unique(x))})==1))
 
-requiredCols=c("Matched_Norm_Sample_Barcode")
+requiredCols=c("Matched_Norm_Sample_Barcode","Tumor_Sample_Barcode")
 degenCols=setdiff(degenCols,requiredCols)
 
 hcCols=setdiff(colnames(mafHC),degenCols)
