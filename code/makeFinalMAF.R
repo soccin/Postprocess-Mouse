@@ -1,7 +1,7 @@
 convertGeneSymbolsMouseToHuman <- function(mgg) {
 
-    human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
-    mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+    human = useMart("ensembl", dataset = "hsapiens_gene_ensembl", host="www.ensembl.org")
+    mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl", host="www.ensembl.org")
 
     mggu=unique(sort(mgg))
 
@@ -60,7 +60,7 @@ INPUT_MAFFILE=args[1]
 if(len(args)==2) {
     OUTPUT_MAFFILE=args[2]
 } else {
-    OUTPUT_MAFFILE=cc("Proj",config$projectNo,"VEP_MAF_","PostV6b")
+    OUTPUT_MAFFILE=cc("Proj",config$projectNo,"VEP_MAF_","PostV6c")
 }
 
 if(is.null(MANIFEST_FILE)) {
@@ -74,7 +74,20 @@ if(is.null(MANIFEST_FILE)) {
 
 cat("\n\n")
 cat("   Tumors =", paste(tumors),"\n\n")
-cat("   Cohort Normals =", paste(cohortNormals),"\n\n")
+if(len(cohortNormals)>0) {
+    cat("   Cohort Normals =", paste(cohortNormals),"\n\n")
+} else {
+    cat("\n\n")
+    cat("  No normals found\n")
+    cat("\n    Need to specify explict manifest file to indicate tumors/normals\n\n")
+    cat("           MANIFEST.CSV:\n")
+    cat("            SAMPLE,TYPE\n")
+    cat("            S1,T\n")
+    cat("            S2,N\n")
+    cat("\n")
+    quit()
+
+}
 
 ################################################################################
 # Read MAF
@@ -91,16 +104,29 @@ cohort.stats=maf %>%
 
 numeric.cols=vars(matches("^Normal_CTRLS_|^POOL_"))
 
+# maf1=maf %>%
+#     filter(Tumor_Sample_Barcode %in% tumors) %>%
+#     left_join(cohort.stats,by="ETAG") %>%
+#     mutate_at(numeric.cols,as.numeric) %>%
+#     mutate(FILTER="PASS",FILTER.REASON="") %>%
+#     mutate(BINOM.pv=pbinom(t_var_freq,2,(POOL_tAD+1)/(POOL_tDP+1),lower=F)) %>%
+#     mutate(BINOM.or=BINOM.pv/(1-BINOM.pv)) %>%
+#     mutate(tVafFreqP=(t_alt_count+1)/(t_depth+2)) %>%
+#     mutate(BINOM.lor=log10((tVafFreqP/(1-tVafFreqP))/BINOM.or)) %>%
+#     mutate(BINOM.Q=-10*log10(BINOM.pv))
+
 maf1=maf %>%
     filter(Tumor_Sample_Barcode %in% tumors) %>%
     left_join(cohort.stats,by="ETAG") %>%
     mutate_at(numeric.cols,as.numeric) %>%
     mutate(FILTER="PASS",FILTER.REASON="") %>%
-    mutate(BINOM.pv=pbinom(t_var_freq,2,(POOL_tAD+1)/(POOL_tDP+1),lower=F)) %>%
-    mutate(BINOM.or=BINOM.pv/(1-BINOM.pv)) %>%
+    mutate(AllNormal_tDP=Normal_CTRLS_tDP+POOL_tDP) %>%
+    mutate(AllNormal_tAD=Normal_CTRLS_tAD+POOL_tAD) %>%
+    mutate(AllNormal_tFreqP=(AllNormal_tAD+1)/(AllNormal_tDP+2)) %>%
     mutate(tVafFreqP=(t_alt_count+1)/(t_depth+2)) %>%
-    mutate(BINOM.lor=log10((tVafFreqP/(1-tVafFreqP))/BINOM.or)) %>%
-    mutate(BINOM.Q=-10*log10(BINOM.pv))
+    mutate(BINOM.pv=pbinom(t_var_freq,2,(AllNormal_tAD+1)/(AllNormal_tDP+1),lower=F)) %>%
+    mutate(SNR.lor=log10((tVafFreqP/(1-tVafFreqP))/(AllNormal_tFreqP/(1-AllNormal_tFreqP))))
+
 
 ii.f=maf1$filter.Targetted!=""
 maf1$FILTER[ii.f]="REMOVE"
@@ -118,9 +144,17 @@ ii.f=which(!(maf1$Normal_CTRLS_maxVF<.25))
 maf1$FILTER[ii.f]="REMOVE"
 maf1$FILTER.REASON[ii.f]=paste(maf1$FILTER.REASON[ii.f],"PresentInControls",sep=",")
 
-ii.f=which(!(maf1$BINOM.lor>log10(10) & maf1$BINOM.fdr<.2))
+ii.f=which(!(maf1$SNR.lor>log10(10) & maf1$BINOM.fdr<.2))
 maf1$FILTER[ii.f]="REMOVE"
 maf1$FILTER.REASON[ii.f]=paste(maf1$FILTER.REASON[ii.f],"PresentInPool",sep=",")
+
+if.f=which(maf1$t_alt_count>=8)
+maf1$FILTER[ii.f]="REMOVE"
+maf1$FILTER.REASON[ii.f]=paste(maf1$FILTER.REASON[ii.f],"ADToLow",sep=",")
+
+if.f=which(maf1$t_var_freq>0.02)
+maf1$FILTER[ii.f]="REMOVE"
+maf1$FILTER.REASON[ii.f]=paste(maf1$FILTER.REASON[ii.f],"VAFToLow",sep=",")
 
 #
 # Mark events that were also detected in any one of the
@@ -167,6 +201,20 @@ mafHC=maf1 %>%
     filter(FILTER=="PASS") %>%
     filter(HGVSp!="" & HGVSp!="p.=")
 
+hcMaf=TRUE
+if(nrow(mafHC)<1) {
+    cat("\n\n  No HC mutations found\n\n")
+    mafHC=maf1 %>%
+        filter(filter.Targetted=="") %>%
+        filter(HGVSp!="" & HGVSp!="p.=")
+
+    hcMaf=FALSE
+    if(nrow(mafHC)<1) {
+        cat("\n\n No LC mutations found\n\n")
+        quit()
+    }
+}
+
 genesV2=convertGeneSymbolsMouseToHuman(mafHC$Hugo_Symbol)
 
 mafHC=mafHC %>%
@@ -188,7 +236,7 @@ GITTAG=paste0(
     )
 
 mafHeader=c(mafHeader,
-    paste0("## PostProcess-Mouse::makeFinalMaf (v2021.1) [",GITTAG,"]")
+    paste0("## PostProcess-Mouse::makeFinalMaf (v2021.2) [",GITTAG,"]")
     )
 
 write_maf(maf1,paste0(OUTPUT_MAFFILE,".txt"),mafHeader)
@@ -213,15 +261,29 @@ params=bind_rows(
     tibble(KEY="COHORT_NORMALS",VALUE=paste(cohortNormals,collapse=","))
     )
 
-tbl=list(
-    maf_Filter8=mafHC,
-    UnFilt_NonSilent=maf1 %>% filter(HGVSp!="" & HGVSp!="p.="),
-    cohortNormalFilter=cohorNormalFilteredEvents,
-    PARAMS=params
+if(hcMaf) {
+    
+    tbl=list(
+        maf_Filter8=mafHC,
+        UnFilt_NonSilent=maf1 %>% filter(HGVSp!="" & HGVSp!="p.="),
+        cohortNormalFilter=cohorNormalFilteredEvents,
+        PARAMS=params
     )
 
-write.xlsx(tbl,paste0(OUTPUT_MAFFILE,"_HQ.xlsx"))
+    write.xlsx(tbl,paste0(OUTPUT_MAFFILE,"_HQ.xlsx"))
 
+} else {
+
+    tbl=list(
+        lowQual=mafHC,
+        UnFilt_NonSilent=maf1 %>% filter(HGVSp!="" & HGVSp!="p.="),
+        cohortNormalFilter=cohorNormalFilteredEvents,
+        PARAMS=params
+    )
+
+    write.xlsx(tbl,paste0(OUTPUT_MAFFILE,"_UnFilt.xlsx"))
+
+}
 # mafDebug=mafHC %>% select(1,ETAG,HGVSp,matches("POOL|CTRL|^t_|Cohort|BINOM")) %>%
 #     distinct(ETAG,.keep_all=T) %>%
 #     arrange(desc(POOL_tVAF))
