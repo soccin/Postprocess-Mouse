@@ -60,7 +60,7 @@ INPUT_MAFFILE=args[1]
 if(len(args)==2) {
     OUTPUT_MAFFILE=args[2]
 } else {
-    OUTPUT_MAFFILE=cc("Proj",config$projectNo,"VEP_MAF_","PostV6c")
+    OUTPUT_MAFFILE=cc("Proj",config$projectNo,"VEP_MAF_","PostV6d")
 }
 
 if(is.null(MANIFEST_FILE)) {
@@ -148,11 +148,11 @@ ii.f=which(!(maf1$SNR.lor>log10(10) & maf1$BINOM.fdr<.2))
 maf1$FILTER[ii.f]="REMOVE"
 maf1$FILTER.REASON[ii.f]=paste(maf1$FILTER.REASON[ii.f],"PresentInPool",sep=",")
 
-if.f=which(maf1$t_alt_count>=8)
+ii.f=which(!(maf1$t_alt_count>=8))
 maf1$FILTER[ii.f]="REMOVE"
 maf1$FILTER.REASON[ii.f]=paste(maf1$FILTER.REASON[ii.f],"ADToLow",sep=",")
 
-if.f=which(maf1$t_var_freq>0.02)
+ii.f=which(!(maf1$t_var_freq>=0.02))
 maf1$FILTER[ii.f]="REMOVE"
 maf1$FILTER.REASON[ii.f]=paste(maf1$FILTER.REASON[ii.f],"VAFToLow",sep=",")
 
