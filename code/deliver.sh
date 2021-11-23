@@ -2,7 +2,7 @@
 
 SDIR="$( cd "$( dirname "$0" )" && pwd )"
 
-if [ "" ]; then
+if [ "$#" == "1" ]; then
 
 POSTDIR=$1
 
@@ -25,11 +25,12 @@ echo
 sudo mkdir -p $PIPELINEDIR/post
 sudo chmod -R g+w $PIPELINEDIR/post
 
-cp -v $POSTDIR/post/*_VEP_MAF__PostV6b.txt $PIPELINEDIR/post
-cp -v $POSTDIR/post/*_VEP_MAF__PostV6b_HQ.xlsx $PIPELINEDIR/post
+cp -v $POSTDIR/post/*_VEP_MAF__PostV6?.txt $PIPELINEDIR/post
+cp -v $POSTDIR/post/*_VEP_MAF__PostV6?_HQ.xlsx $PIPELINEDIR/post
 
 else
-    PROJECTNO=12345_AB
+    echo usage: delivery.sh postDirectory
+    exit
 fi
 
 cat << EOM
@@ -44,9 +45,11 @@ You can access them on the BIC Delivery server at:
 
 EOM
 
-#cat $SDIR/outputDesc.md
+cat $SDIR/outputDesc.md
 
 cat << EOM
+
+
 If you require any further assistance let me know. If you are collaborating with a data-analyst in the CMO/Componc we can make the files directly available to them on the MSK cluster.
 
 Nicholas Socci
