@@ -25,9 +25,9 @@ echo
 sudo mkdir -p $PIPELINEDIR/post
 sudo chmod -R g+w $PIPELINEDIR/post
 
-cp -v $POSTDIR/post/*_VEP_MAF__PostV6?.txt $PIPELINEDIR/post
-cp -v $POSTDIR/post/*_VEP_MAF__PostV6?_HQ.xlsx $PIPELINEDIR/post
-
+cp -v $POSTDIR/post/P*_VEP_MAF__PostV6?.txt $PIPELINEDIR/post
+cp -v $POSTDIR/post/P*_VEP_MAF__PostV6?_HQ.xlsx $PIPELINEDIR/post
+cp -v $POSTDIR/post/P*_VEP_MAF__PostV6?_UnFilt.xlsx $PIPELINEDIR/post
 else
     echo usage: delivery.sh postDirectory
     exit
