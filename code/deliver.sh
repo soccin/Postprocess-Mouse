@@ -55,6 +55,6 @@ If you require any further assistance let me know. If you are collaborating with
 Nicholas Socci
 Bioinformatics Core
 MSKCC
-socci@cbio.mskcc.org
+soccin@mskcc.org
 EOM
 
