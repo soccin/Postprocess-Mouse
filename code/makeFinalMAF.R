@@ -224,8 +224,6 @@ mafHC=mafHC %>%
 
 gTagNames=names(git2r::tags(SDIR))
 
-stop("DDDD")
-
 GITTAG=paste0(
     gTagNames[len(gTagNames)],"-g",
     substr(git2r::commits(SDIR)[[1]]$sha,1,8)
