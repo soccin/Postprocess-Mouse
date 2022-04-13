@@ -1,18 +1,12 @@
 convertGeneSymbolsMouseToHuman <- function(mgg) {
 
-    human = useMart("ensembl", dataset = "hsapiens_gene_ensembl", host="www.ensembl.org")
-    mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl", host="www.ensembl.org")
+    source(file.path(SDIR,"convert_mouse_to_human.R"))
 
-    mggu=unique(sort(mgg))
-
-    genesV2 = getLDS(
-        attributes = c("mgi_symbol"),
-        filters = "mgi_symbol",
-        values = mggu,
-        mart = mouse,
-        attributesL = c("hgnc_symbol"),
-        martL = human,
-        uniqueRows=T)
+    mgg=tibble(Gene=unique(mgg))
+    genesV2=convert_mouse_to_human(mgg) %>%
+        rename(HGNC.symbol=Gene) %>%
+        bind_cols(mgg) %>%
+        rename(MGI.symbol=Gene)
 
     genesV2
 
@@ -229,6 +223,8 @@ mafHC=mafHC %>%
     dropEmptyColumns
 
 gTagNames=names(git2r::tags(SDIR))
+
+stop("DDDD")
 
 GITTAG=paste0(
     gTagNames[len(gTagNames)],"-g",
