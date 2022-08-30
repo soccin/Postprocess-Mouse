@@ -77,7 +77,7 @@ echo
 echo
 echo "#####"
 echo "Get fillout"
-Rscript --no-save /juno/home/socci/Code/FillOut/FillOut21/makeMinimalMaf.R maf1.txt
+Rscript --no-save /home/socci/Code/FillOut/FillOut21/makeMinimalMaf.R maf1.txt
 ls $BAMDIR/*bam >bamList
 cat bamList | sed 's/.*_s_/s_/' | sed 's/.bam//' >sids
 paste sids bamList >bam_fof
@@ -86,7 +86,7 @@ cat \
     $MIMPACT_POOL_SAMPLES \
     >>bam_fof
 
-/juno/home/socci/Code/FillOut/FillOut21/bin/GetBaseCountsMultiSample \
+/home/socci/Code/FillOut/FillOut21/bin/GetBaseCountsMultiSample \
     --thread 24 \
     --filter_improper_pair 0 \
     --fasta /juno/depot/assemblies/M.musculus/mm10/mm10.fasta \
