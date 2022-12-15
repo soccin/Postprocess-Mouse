@@ -1,4 +1,4 @@
-There is a brief writeup of the various output files is attached below. In addition to the full pipeline output in the above folders attached is an excel file which has filtered mutation list to contain just those events that:
+There is a brief write-up of the various output files is attached below. In addition to the full pipeline output in the above folders attached is an excel file which has filtered mutation list to contain just those events that:
 
 1. Are in the M-IMPACT (ver 2) target area; ie they in genes in the M-IMPACT assay
 
@@ -6,13 +6,13 @@ There is a brief writeup of the various output files is attached below. In addit
 
 3. Mutations that were _NOT_ seen in Normal control samples in this project.
 
-4. Mutations which had variant allele frequences too large in either:
+4. Mutations which had variant allele frequencies too large in either:
 
     - A set of control normal samples used to validate the assay
 
     - A set of pooled normal samples from previous runs
 
-5. Mutations with tumor variant allele frequeces too low (<2%)
+5. Mutations with tumor variant allele frequencies too low (<2%)
 
 6. Mutations which did not have at least 8 reads that showed the mutation (AD>=8)
 
