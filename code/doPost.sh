@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 SDIR="$( cd "$( dirname "$0" )" && pwd )"
 
 POSTPROCESS_SCRIPT=/home/socci/Work/LUNA/Work/PostProcess/Mouse/Version5/PostProcess_V5-Mouse/doPostProcessV5.sh
