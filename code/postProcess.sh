@@ -1,11 +1,16 @@
 #!/bin/bash
 
+set -e
+
 export SDIR="$( cd "$( dirname "$0" )" && pwd )"
 SVERSION=$(git --git-dir=$SDIR/../.git describe --tags --always --long)
 echo $SVERSION
 
-export R_LIBS=/home/socci/lib/R/CentOS7/4.1.2
-RSCRIPT=/juno/work/bic/socci/opt/common/CentOS_7/R/R-4.1.2/bin/Rscript
+#export R_LIBS=/home/socci/lib/R/CentOS7/4.1.2
+#RSCRIPT=/juno/work/bic/socci/opt/common/CentOS_7/R/R-4.1.2/bin/Rscript
+
+module unload R
+module load R/R-4.1.2_nds
 
 . ../config
 
@@ -39,8 +44,11 @@ if [ "$MAF_GENOME" != "$BAM_GENOME" ]; then
     echo
     echo "Mismatch in MAF($MAF_GENOME)/BAM($BAM_GENOME) genomes"
     if [ "$MAF_GENOME" == "GRCm38" ]; then
+        echo
+        echo "====================================================="
         echo "Fixing chromosome names"
-        $SDIR/fixChromosomesToUCSC.R IN=$MERGEDMAF OUT=maf0.txt
+        echo
+        Rscript $SDIR/fixChromosomesToUCSC.R IN=$MERGEDMAF OUT=maf0.txt
     else
         echo
         echo
@@ -50,6 +58,7 @@ else
     ln -s $MERGEDMAF maf0.txt
 fi
 echo
+
 
 MIMPACTVERSION="M-IMPACT_v2"
 #######
