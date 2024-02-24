@@ -31,9 +31,9 @@ if(len(ii)==1) {
 }
 
 suppressPackageStartupMessages({
-    require(biomaRt)
-    require(tidyverse)
-    require(openxlsx)
+    library(biomaRt)
+    library(tidyverse)
+    library(openxlsx)
     })
 
 SDIR=Sys.getenv("SDIR")
@@ -193,14 +193,14 @@ chromoLevels=paste0("chr",c(1:19,"X","Y","M","MT"))
 
 mafHC=maf1 %>%
     filter(FILTER=="PASS") %>%
-    filter(HGVSp!="" & HGVSp!="p.=")
+    filter(HGVSp!="" & !grepl("=$",HGVSp))
 
 hcMaf=TRUE
 if(nrow(mafHC)<1) {
     cat("\n\n  No HC mutations found\n\n")
     mafHC=maf1 %>%
         filter(filter.Targetted=="") %>%
-        filter(HGVSp!="" & HGVSp!="p.=")
+        filter(HGVSp!="" & !grepl("=$",HGVSp))
 
     hcMaf=FALSE
     if(nrow(mafHC)<1) {
@@ -259,7 +259,7 @@ if(hcMaf) {
     
     tbl=list(
         maf_Filter8=mafHC,
-        UnFilt_NonSilent=maf1 %>% filter(HGVSp!="" & HGVSp!="p.="),
+        UnFilt_NonSilent=maf1 %>% filter(HGVSp!="" !grepl("=$",HGVSp)),
         cohortNormalFilter=cohorNormalFilteredEvents,
         PARAMS=params
     )
@@ -270,7 +270,7 @@ if(hcMaf) {
 
     tbl=list(
         lowQual=mafHC,
-        UnFilt_NonSilent=maf1 %>% filter(HGVSp!="" & HGVSp!="p.="),
+        UnFilt_NonSilent=maf1 %>% filter(HGVSp!="" & !grepl("=$",HGVSp)),
         cohortNormalFilter=cohorNormalFilteredEvents,
         PARAMS=params
     )
