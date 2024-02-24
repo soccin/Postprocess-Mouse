@@ -259,7 +259,7 @@ if(hcMaf) {
     
     tbl=list(
         maf_Filter8=mafHC,
-        UnFilt_NonSilent=maf1 %>% filter(HGVSp!="" !grepl("=$",HGVSp)),
+        UnFilt_NonSilent=maf1 %>% filter(HGVSp!="" & !grepl("=$",HGVSp)),
         cohortNormalFilter=cohorNormalFilteredEvents,
         PARAMS=params
     )
