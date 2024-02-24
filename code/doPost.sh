@@ -94,13 +94,11 @@ cd $POSTDIR/post
 #echo bsub -o LSF.00.POST5/ -J POST_$$ -R "rusage[mem=32]" $LSF_TIME_LIMIT
 
 module load singularity/3.7.1
-IMAGE=$SDIR/images/triassic_test1.sif
+IMAGE=$SDIR/images/triassic_v1.0.1.sif
 
 if [ ! -e $IMAGE ]; then
     echo -e "\n\n\tNeed to get image\n\n$IMAGE\n\n"
-
-    #singularity pull $SDIR/images/mjolnir.sif docker://mskcc/mjolnir
-
+    echo "Check images folder for Dockerfile" 
     echo -e "\n\n"
 fi
 
