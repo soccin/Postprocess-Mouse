@@ -9,8 +9,10 @@ echo $SVERSION
 #export R_LIBS=/home/socci/lib/R/CentOS7/4.1.2
 #RSCRIPT=/juno/work/bic/socci/opt/common/CentOS_7/R/R-4.1.2/bin/Rscript
 
-module unload R
-module load R/R-4.1.2_nds
+echo PWD=$PWD
+echo SDIR=$SDIR
+
+set -e
 
 . ../config
 
@@ -38,6 +40,7 @@ BAMDIR=$PIPELINEDIR/alignments
 BAM1=$(ls $BAMDIR/*.bam | head -1)
 
 MAF_GENOME=$(head $MERGEDMAF  | tail -1 | cut -f4)
+
 BAM_GENOME=$(~/Code/FillOut/FillOut/GenomeData/getGenomeBuildBAM.sh $BAM1)
 
 if [ "$MAF_GENOME" != "$BAM_GENOME" ]; then

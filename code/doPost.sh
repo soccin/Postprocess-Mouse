@@ -2,6 +2,9 @@
 
 set -e
 
+#ROOT=""
+ROOT=/rtsess01/compute/juno/bic
+
 SDIR="$( cd "$( dirname "$0" )" && pwd )"
 
 POSTPROCESS_SCRIPT=/home/socci/Work/LUNA/Work/PostProcess/Mouse/Version5/PostProcess_V5-Mouse/doPostProcessV5.sh
@@ -44,7 +47,7 @@ fi
 
 SDIR="$( cd "$( dirname "$0" )" && pwd )"
 
-PIPELINEDIR=$1
+PIPELINEDIR=$(realpath $ROOT/$1)
 projectNo=$(echo $PIPELINEDIR | perl -ne 'm|/Proj_([^/\s]*)|; print $1')
 runNo=$(echo $PIPELINEDIR | perl -ne 'm|/Proj_[^/\s]*/(r_\d+)|; print $1')
 
@@ -60,8 +63,8 @@ if [ "$runNo" == "" ]; then
 fi
 
 if [ "$PROJECTDIR" == "" ]; then
-	NUMDIRS=$(find /juno/projects/BIC/variant -type d | egrep -v "(drafts|archive)" | egrep "Proj_$projectNo$" | wc -l)
-	PROJECTDIR=$(find /juno/projects/BIC/variant -type d | egrep -v "(drafts|archive)" | egrep "Proj_$projectNo$")
+	NUMDIRS=$(find $ROOT/juno/projects/BIC/variant -type d | egrep -v "(drafts|archive)" | egrep "Proj_$projectNo$" | wc -l)
+	PROJECTDIR=$(find $ROOT/juno/projects/BIC/variant -type d | egrep -v "(drafts|archive)" | egrep "Proj_$projectNo$")
 	SCRIPT=$(basename $0)
 	if [ "$NUMDIRS" != "1" ]; then
 		echo $SCRIPT Problem finding project files for Proj_$projectNo
@@ -90,6 +93,21 @@ CWD=$PWD
 cd $POSTDIR/post
 #echo bsub -o LSF.00.POST5/ -J POST_$$ -R "rusage[mem=32]" $LSF_TIME_LIMIT
 
-$SDIR/postProcess.sh $MANIFESTFILE
+module load singularity/3.7.1
+IMAGE=$SDIR/images/triassic_test1.sif
+
+if [ ! -e $IMAGE ]; then
+    echo -e "\n\n\tNeed to get image\n\n$IMAGE\n\n"
+
+    #singularity pull $SDIR/images/mjolnir.sif docker://mskcc/mjolnir
+
+    echo -e "\n\n"
+fi
+
+singularity exec \
+	--bind /rtsess01:/rtsess01 \
+	--bind /rtsess01/compute/juno/bic/juno:/juno \
+	$IMAGE \
+	$SDIR/postProcess.sh $MANIFESTFILE
 
 cd $CWD
